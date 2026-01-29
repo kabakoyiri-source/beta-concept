@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Client Area Redirect</title>
+</head>
+
+<body>
+    <h1>Test de redirection Client Area</h1>
+    <button class="js-open-client">Client area</button>
+
+    <div id="debug-info" style="margin-top: 20px; padding: 10px; background: #f0f0f0;">
+        <h3>Informations de débogage :</h3>
+        <p><strong>URL actuelle :</strong> <span id="current-url"></span></p>
+        <p><strong>Pathname :</strong> <span id="pathname"></span></p>
+        <p><strong>Origin :</strong> <span id="origin"></span></p>
+        <p><strong>URL de la page Client Area calculée :</strong> <span id="dashboard-url"></span></p>
+    </div>
+
+    <script>
+        // Afficher les informations de débogage
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('pathname').textContent = window.location.pathname;
+        document.getElementById('origin').textContent = window.location.origin;
+
+        // Calculer l'URL du dashboard
+        const currentPath = window.location.pathname;
+        let projectBase = '';
+
+        const betaIndex = currentPath.toLowerCase().indexOf('/beta-concept/');
+        if (betaIndex !== -1) {
+            projectBase = currentPath.substring(0, betaIndex + '/beta-concept/'.length);
+        } else {
+            const pathParts = currentPath.split('/');
+            const betaConceptIndex = pathParts.findIndex(part => part.toLowerCase() === 'beta-concept');
+            if (betaConceptIndex !== -1) {
+                projectBase = pathParts.slice(0, betaConceptIndex + 1).join('/') + '/';
+            } else {
+                projectBase = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+            }
+        }
+
+        const dashboardUrl = window.location.origin + projectBase + 'account/login/index.html';
+        document.getElementById('dashboard-url').textContent = dashboardUrl;
+
+        // Ajouter l'événement de clic
+        document.querySelector('.js-open-client').addEventListener('click', function (e) {
+            e.preventDefault();
+            console.log('Redirection vers:', dashboardUrl);
+            alert('Redirection vers: ' + dashboardUrl);
+            // Décommenter pour tester la vraie redirection
+            // window.location.href = dashboardUrl;
+        });
+    </script>
+</body>
+
+</html>

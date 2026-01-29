@@ -23,17 +23,22 @@
         }
 
         @media (max-width: 900px) {
-            .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
+
         @media (max-width: 600px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .dashboard-card {
             background: #fff;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
             border: 1px solid #eee;
             transition: all 0.3s ease;
             text-decoration: none;
@@ -56,7 +61,9 @@
             font-family: 'Roboto', sans-serif;
         }
 
-        .dashboard-card .icon { font-size: 1.3em; }
+        .dashboard-card .icon {
+            font-size: 1.3em;
+        }
 
         .card-status {
             display: inline-block;
@@ -67,9 +74,20 @@
             margin-left: auto;
         }
 
-        .status-active { background: #e8f5e9; color: #2e7d32; }
-        .status-pending { background: #fff3e0; color: #ef6c00; }
-        .status-new { background: #e3f2fd; color: #1565c0; }
+        .status-active {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-pending {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status-new {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
 
         .logout-header {
             display: flex;
@@ -89,9 +107,13 @@
             font-weight: 500;
         }
 
-        .logout-btn:hover { background: #6b1e1f; }
+        .logout-btn:hover {
+            background: #6b1e1f;
+        }
 
-        .section-header { margin-bottom: 10px; }
+        .section-header {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -106,7 +128,8 @@
 
                 <a href="../../index.html" class="logo">
                     <img src="../../media/1015/logo-white.svg" class="logo-white" />
-                    <img src="../../media/1014/redlogo.png" alt="Beta Concept" class="logo-emblem" style="display: block !important; opacity: 1 !important;" />
+                    <img src="../../media/1014/redlogo.png" alt="Beta Concept" class="logo-emblem"
+                        style="display: block !important; opacity: 1 !important;" />
                 </a>
 
                 <div class="right">
@@ -231,68 +254,25 @@
 
     <script src="../../components/auth.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const loginSection = document.getElementById('login-section');
             const dashboardContent = document.getElementById('dashboard-content');
-            const loginForm = document.getElementById('login-form-page');
-            const loginError = document.getElementById('login-error');
-            const loginBtn = document.getElementById('login-btn');
             const headerLogoutBtn = document.getElementById('header-logout-btn');
 
-            function checkAuth() {
-                if (window.BetaAuth && window.BetaAuth.isLoggedIn()) {
-                    showDashboard(window.BetaAuth.getCurrentUser());
-                } else {
-                    showLoginSection();
-                }
-            }
-
-            function showLoginSection() {
-                loginSection.style.display = 'block';
-                dashboardContent.style.display = 'none';
-                headerLogoutBtn.querySelector('span').textContent = 'Client area';
-            }
-
-            function showDashboard(user) {
+            // Afficher directement le dashboard sans vérification d'authentification
+            function showDashboard() {
                 loginSection.style.display = 'none';
                 dashboardContent.style.display = 'block';
                 headerLogoutBtn.querySelector('span').textContent = 'Logout';
-                headerLogoutBtn.onclick = function() {
-                    if (window.BetaAuth) window.BetaAuth.logout();
+                headerLogoutBtn.onclick = function () {
                     window.location.href = '../../index.html';
                 };
             }
 
-            if (loginForm) {
-                loginForm.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    const email = document.getElementById('login-email').value.trim();
-                    const password = document.getElementById('login-password').value;
-
-                    loginError.style.display = 'none';
-                    loginBtn.disabled = true;
-                    loginBtn.textContent = 'Logging in...';
-
-                    try {
-                        const result = await window.BetaAuth.login(email, password);
-                        if (result.success) {
-                            showDashboard(result.user);
-                        } else {
-                            loginError.textContent = result.message || 'Invalid credentials.';
-                            loginError.style.display = 'block';
-                        }
-                    } catch (error) {
-                        loginError.textContent = 'An error occurred. Please try again.';
-                        loginError.style.display = 'block';
-                    } finally {
-                        loginBtn.disabled = false;
-                        loginBtn.textContent = 'Login';
-                    }
-                });
-            }
-
-            setTimeout(checkAuth, 100);
+            // Afficher le dashboard immédiatement
+            showDashboard();
         });
     </script>
 </body>
+
 </html>

