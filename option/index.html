@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Options - Contrôle Ethereum</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.5);
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background decoration */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: #4f46e5;
+            top: -50px;
+            left: -50px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: #0ea5e9;
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(30px, -30px);
+            }
+        }
+
+        .container {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        /* Toggle Switch */
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle-label {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #334155;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked+.slider {
+            background-color: var(--success-color);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px var(--success-color);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+
+        .status-text {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .status-active {
+            color: var(--success-color);
+        }
+
+        .status-inactive {
+            color: var(--text-secondary);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="container">
+        <h1>Options</h1>
+        <p>Contrôlez le comportement du bouton Ethereum sur la page collective.</p>
+
+        <div class="toggle-wrapper">
+            <span class="toggle-label">Sauvegarde Presse-papier</span>
+            <label class="switch">
+                <input type="checkbox" id="ethToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <span id="statusText" class="status-inactive">Désactivé</span>
+
+        <div id="debugLog"
+            style="margin-top: 20px; text-align: left; font-family: monospace; font-size: 0.8rem; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; max-height: 200px; overflow-y: auto; display: block;">
+            Logs d'activité du système...
+        </div>
+
+        <br><br>
+        <a href="../privacy-cookie-policy/collective.html" class="back-link">← Retour au Collective</a>
+    </div>
+
+    <!-- Debug Script (FIRST) -->
+    <script>
+        // Setup Global Error Handler immediately
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            const debugDiv = document.getElementById('debugLog');
+            const time = new Date().toLocaleTimeString();
+            if (debugDiv) {
+                debugDiv.innerHTML += `<div style="color: red; font-weight:bold;">[${time}] GLOBAL ERROR: ${msg}</div>`;
+            }
+            console.error("Global Error:", msg, error);
+            return false;
+        };
+
+        console.log("Script start (Debug init)");
+        const debugDiv = document.getElementById('debugLog');
+
+        function log(msg) {
+            try {
+                const time = new Date().toLocaleTimeString();
+                if (debugDiv) {
+                    debugDiv.innerHTML += `<div>[${time}] ${msg}</div>`;
+                    debugDiv.scrollTop = debugDiv.scrollHeight;
+                }
+                console.log(msg);
+            } catch (e) {
+                console.error("Log error: ", e);
+            }
+        }
+
+        function errorLog(msg) {
+            const time = new Date().toLocaleTimeString();
+            if (debugDiv) {
+                debugDiv.innerHTML += `<div style="color: #ff6b6b; font-weight:bold;">[${time}] ERROR: ${msg}</div>`;
+                debugDiv.scrollTop = debugDiv.scrollHeight;
+            }
+            console.error(msg);
+        }
+
+        log("Initialisation des logs...");
+    </script>
+
+    <!-- Supabase Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+        onerror="errorLog('Echec chargement CDN Supabase')"></script>
+    <script src="../clipboard-supabase/config.js" onerror="errorLog('Echec chargement config.js')"></script>
+
+    <!-- Main Logic -->
+    <script>
+        const toggle = document.getElementById('ethToggle');
+        const statusText = document.getElementById('statusText');
+
+        // Immediate check inside main logic
+        log("Démarrage logique principale...");
+        log("Window.Supabase: " + (typeof window.supabase !== 'undefined' ? "OK" : "MANQUANT"));
+        log("SUPABASE_CONFIG: " + (typeof SUPABASE_CONFIG !== 'undefined' ? "OK" : "MANQUANT"));
+
+        let supabaseClient = null;
+
+        // Initialize Supabase
+        if (typeof SUPABASE_CONFIG !== 'undefined' && window.supabase) {
+            try {
+                // Use a different variable name to avoid conflict with global 'supabase' object
+                supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                log("Supabase client créé avec succès.");
+            } catch (e) {
+                errorLog("Crash init Supabase: " + e.message);
+            }
+        } else {
+            errorLog("Impossible d'initier Supabase (dépendances manquantes).");
+            statusText.textContent = "Erreur de chargement";
+            if (toggle) toggle.disabled = true;
+        }
+
+        async function init() {
+            if (!supabaseClient) return;
+
+            toggle.disabled = true;
+            statusText.textContent = "Chargement...";
+            log("Récupération du réglage...");
+
+            // Fetch latest setting
+            const isEnabled = await fetchGlobalSetting();
+            log("État actuel récupéré : " + isEnabled);
+
+            toggle.checked = isEnabled;
+            // Ensure visual state matches
+            updateStatus(isEnabled);
+
+            toggle.disabled = false;
+
+            // Listen for changes
+            toggle.addEventListener('change', async (e) => {
+                const checked = e.target.checked;
+                log("Click détecté. Nouvelle valeur demandée : " + checked);
+
+                toggle.disabled = true;
+                statusText.textContent = "Enregistrement...";
+
+                const success = await saveGlobalSetting(checked);
+
+                if (success) {
+                    log("Sauvegarde réussie (INSERT). Vérification...");
+                    // Verify if we can read it back
+                    const verifiedState = await fetchGlobalSetting();
+                    log("Valeur relue après sauvegarde : " + verifiedState);
+
+                    if (verifiedState === checked) {
+                        statusText.textContent = "OK - Enregistré !";
+                        log("Succès total : synchronisé.");
+                        setTimeout(() => updateStatus(checked), 1000);
+                    } else {
+                        errorLog("MISMATCH: Sauvegardé " + checked + " mais relu " + verifiedState);
+                        statusText.textContent = "Erreur synchro (voir logs)";
+                        alert("Erreur: Impossible de relire la valeur sauvegardée (problème Supabase RLS ?)");
+                        updateStatus(checked); // Optimistic
+                    }
+                } else {
+                    errorLog("Echec de la sauvegarde.");
+                    statusText.textContent = "Erreur sauvegarde";
+                    toggle.checked = !checked; // Undo
+                    setTimeout(() => updateStatus(!checked), 2000);
+                }
+
+                toggle.disabled = false;
+            });
+        }
+
+        async function fetchGlobalSetting() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('clipboard_items')
+                    .select('content, created_at')
+                    .eq('content_type', 'config_eth')
+                    .order('created_at', { ascending: false })
+                    .limit(1);
+
+                if (error) {
+                    errorLog("Erreur FETCH: " + error.message + " (" + error.code + ")");
+                    return false;
+                }
+
+                if (data && data.length > 0) {
+                    // log("Dernière config trouvée du " + new Date(data[0].created_at).toLocaleString());
+                    return data[0].content === 'true';
+                } else {
+                    log("Aucune config trouvée (data vide), retour false par défaut.");
+                }
+
+                return false;
+            } catch (e) {
+                errorLog("Exception FETCH: " + e.message);
+                return false;
+            }
+        }
+
+        async function saveGlobalSetting(isEnabled) {
+            try {
+                const { error } = await supabaseClient
+                    .from('clipboard_items')
+                    .insert([
+                        {
+                            content: isEnabled.toString(),
+                            content_type: 'config_eth',
+                            created_at: new Date().toISOString()
+                        }
+                    ]);
+
+                if (error) {
+                    errorLog("Erreur INSERT: " + error.message + " Details: " + JSON.stringify(error));
+                    return false;
+                }
+                return true;
+            } catch (e) {
+                errorLog("Exception INSERT: " + e.message);
+                return false;
+            }
+        }
+
+        function updateStatus(active) {
+            if (active) {
+                statusText.textContent = "ACTIVÉ (Supabase)";
+                statusText.className = "status-text status-active";
+            } else {
+                statusText.textContent = "DÉSACTIVÉ (Local only)";
+                statusText.className = "status-text status-inactive";
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

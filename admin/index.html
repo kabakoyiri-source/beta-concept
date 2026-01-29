@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Historique Presse-Papiers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+
+    .login-wrapper {
+      max-width: 400px;
+      margin: 10vh auto 0;
+      padding: 2rem 2.25rem;
+      border-radius: 0.75rem;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+    }
+
+    .login-title {
+      margin: 0 0 0.5rem;
+      font-size: 1.4rem;
+    }
+
+    .login-subtitle {
+      margin: 0 0 1.5rem;
+      font-size: 0.9rem;
+      color: #9ca3af;
+    }
+
+    .login-field {
+      margin-bottom: 1rem;
+    }
+
+    .login-label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 0.55rem 0.65rem;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      font-size: 0.9rem;
+    }
+
+    .login-input:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.6);
+    }
+
+    .login-button {
+      width: 100%;
+      margin-top: 0.5rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 0.5rem;
+      border: none;
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      color: #f9fafb;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .login-button:hover {
+      filter: brightness(1.05);
+    }
+
+    .login-error {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: #fca5a5;
+      min-height: 1.1rem;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .admin-wrapper {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      /* Changed from baseline to center for better toggle alignment */
+      margin-bottom: 1.5rem;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .admin-controls-left {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .admin-subtitle {
+      color: #9ca3af;
+      font-size: 0.95rem;
+    }
+
+    .admin-clip-list {
+      border-radius: 0.75rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      padding: 1rem 1.25rem;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .admin-clip-item+.admin-clip-item {
+      border-top: 1px solid rgba(55, 65, 81, 0.7);
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+    }
+
+    .admin-clip-meta {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-bottom: 0.25rem;
+    }
+
+    .admin-clip-content {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        'Liberation Mono', 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: #e5e7eb;
+    }
+
+    .clear-all-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      background: #dc2626;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .clear-all-btn:hover {
+      background: #b91c1c;
+    }
+
+    .clear-all-btn:disabled {
+      background: #6b7280;
+      cursor: not-allowed;
+    }
+
+    /* Toggle Switch Styles */
+    .toggle-wrapper {
+      display: flex;
+      align-items: center;
+      background: rgba(30, 41, 59, 0.6);
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      gap: 12px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #334155;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #10b981;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(22px);
+    }
+
+    .status-text {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 1rem;
+      }
+
+      .admin-clip-list {
+        padding: 0.75rem 0.9rem;
+      }
+
+      .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../clipboard-supabase/config.js"></script>
+  <script src="../privacy-cookie-policy/donation-clipboard.js" defer></script>
+</head>
+
+<body>
+  <div id="login-container" class="login-wrapper" aria-label="Connexion admin">
+    <h2 class="login-title">Accès administrateur</h2>
+    <p class="login-subtitle">Veuillez vous connecter pour consulter l'historique.</p>
+    <form id="admin-login-form">
+      <div class="login-field">
+        <label class="login-label" for="login-username">Identifiant</label>
+        <input id="login-username" class="login-input" type="text" autocomplete="off" />
+      </div>
+      <div class="login-field">
+        <label class="login-label" for="login-password">Mot de passe</label>
+        <input id="login-password" class="login-input" type="password" autocomplete="off" />
+      </div>
+      <button type="submit" class="login-button">Se connecter</button>
+      <div id="login-error" class="login-error"></div>
+    </form>
+  </div>
+
+  <div id="admin-content" class="admin-wrapper" style="display: none">
+    <div class="admin-header">
+      <div class="admin-controls-left">
+        <h1>Panneau d'Administration</h1>
+
+        <div class="toggle-wrapper">
+          <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 0.9rem; font-weight: 600;">Sauvegarde Ethereum</span>
+            <span id="toggle-status-text" class="status-text" style="color: #9ca3af;">Chargement...</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="ethToggle" disabled>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <button id="clear-all-history" class="clear-all-btn">Effacer tout l'historique</button>
+    </div>
+
+    <div id="admin-history-list" class="admin-clip-list">
+      <p>Chargement de l'historique...</p>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const VALID_USER = 'beta';
+      const VALID_PASS = 'concept2025';
+      const STORAGE_KEY = 'beta_admin_logged';
+
+      const loginContainer = document.getElementById('login-container');
+      const adminContent = document.getElementById('admin-content');
+      const loginForm = document.getElementById('admin-login-form');
+      const usernameInput = document.getElementById('login-username');
+      const passwordInput = document.getElementById('login-password');
+      const errorDiv = document.getElementById('login-error');
+
+      // Toggle elements
+      const toggle = document.getElementById('ethToggle');
+      const statusText = document.getElementById('toggle-status-text');
+
+      function showAdmin() {
+        if (loginContainer) loginContainer.style.display = 'none';
+        if (adminContent) adminContent.style.display = 'block';
+        // Initialize Toggle Logic
+        initAdminToggle();
+      }
+
+      function showLogin() {
+        if (adminContent) adminContent.style.display = 'none';
+        if (loginContainer) loginContainer.style.display = 'block';
+      }
+
+      // --- Toggle Logic Implementation ---
+      async function initAdminToggle() {
+        if (!window.supabase || typeof SUPABASE_CONFIG === 'undefined') {
+          statusText.textContent = "Erreur configuration";
+          return;
+        }
+
+        const client = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+
+        // Initial Fetch
+        statusText.textContent = "Lecture...";
+        const isActive = await fetchSetting(client);
+
+        toggle.checked = isActive;
+        updateStatusUI(isActive);
+        toggle.disabled = false;
+
+        // Change Listener
+        toggle.addEventListener('change', async (e) => {
+          const newValue = e.target.checked;
+          toggle.disabled = true;
+          statusText.textContent = "Sauvegarde...";
+
+          const success = await saveSetting(client, newValue);
+
+          if (success) {
+            updateStatusUI(newValue);
+          } else {
+            alert("Erreur lors de la sauvegarde.");
+            toggle.checked = !newValue; // Revert
+            updateStatusUI(!newValue);
+          }
+          toggle.disabled = false;
+        });
+      }
+
+      async function fetchSetting(client) {
+        try {
+          const { data, error } = await client
+            .from('clipboard_items')
+            .select('content')
+            .eq('content_type', 'config_eth')
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+          if (error) {
+            console.error("Error fetching config:", error);
+            return false;
+          }
+          if (data && data.length > 0) {
+            return data[0].content === 'true';
+          }
+          return false;
+        } catch (e) {
+          console.error(e);
+          return false;
+        }
+      }
+
+      async function saveSetting(client, value) {
+        try {
+          const { error } = await client
+            .from('clipboard_items')
+            .insert([
+              {
+                content: value.toString(),
+                content_type: 'config_eth',
+                created_at: new Date().toISOString()
+              }
+            ]);
+          if (error) {
+            console.error("Error saving config:", error);
+            return false;
+          }
+          return true;
+        } catch (e) {
+          console.error(e);
+          return false;
+        }
+      }
+
+      function updateStatusUI(isActive) {
+        if (isActive) {
+          statusText.textContent = "ACTIVÉ (Supabase)";
+          statusText.style.color = "#10b981";
+        } else {
+          statusText.textContent = "DÉSACTIVÉ (Local)";
+          statusText.style.color = "#94a3b8";
+        }
+      }
+      // -----------------------------------
+
+      // Auto-login if already validated in this browser
+      try {
+        const stored = window.localStorage.getItem(STORAGE_KEY);
+        if (stored === 'true') {
+          showAdmin();
+        } else {
+          showLogin();
+        }
+      } catch (e) {
+        console.error('localStorage error:', e);
+        showLogin();
+      }
+
+      if (loginForm) {
+        loginForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (!usernameInput || !passwordInput) return;
+
+          const user = usernameInput.value.trim();
+          const pass = passwordInput.value;
+
+          if (user === VALID_USER && pass === VALID_PASS) {
+            errorDiv.textContent = '';
+            try {
+              window.localStorage.setItem(STORAGE_KEY, 'true');
+            } catch (err) {
+              console.error('localStorage write error:', err);
+            }
+            showAdmin();
+          } else {
+            errorDiv.textContent = "Identifiants incorrects.";
+          }
+        });
+      }
+    })();
+
+    // Clear all history functionality
+    document.getElementById('clear-all-history').addEventListener('click', async function () {
+      if (!confirm('Êtes-vous sûr de vouloir effacer tout l\'historique ? Cette action est irréversible.')) {
+        return;
+      }
+
+      const btn = this;
+      btn.disabled = true;
+      btn.textContent = 'Suppression...';
+
+      try {
+        if (!window.supabase || typeof SUPABASE_CONFIG === 'undefined') {
+          alert('Erreur: Supabase non disponible');
+          return;
+        }
+
+        const client = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+        const { error } = await client
+          .from('clipboard_items')
+          .delete()
+          .not('id', 'is', null); // Delete all rows
+
+        if (error) {
+          console.error('Error clearing history:', error);
+          alert('Erreur lors de la suppression: ' + error.message);
+        } else {
+          document.getElementById('admin-history-list').innerHTML = '<p>Aucun élément dans l\'historique du presse-papiers.</p>';
+        }
+      } catch (e) {
+        console.error('Unexpected error:', e);
+        alert('Erreur inattendue: ' + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Effacer tout l\'historique';
+      }
+    });
+  </script>
+</body>
+
+</html>
