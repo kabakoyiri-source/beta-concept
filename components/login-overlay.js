@@ -210,37 +210,19 @@
 
     // Injecter le formulaire de login dans la page
     function injectLoginOverlay() {
-        // Vérifier si le overlay existe déjà
+        // NE PLUS INJECTER L'OVERLAY - on redirige directement
+        // Vérifier si le overlay existe déjà (pour compatibilité)
         if (document.getElementById('login-overlay')) {
             return;
         }
 
-        // Trouver le header ou créer un conteneur
-        const header = document.querySelector('header.header');
-        if (header) {
-            // Supprimer l'ancien overlay s'il existe
-            const existingOverlay = header.querySelector('.client-overlay-wrap');
-            if (existingOverlay) {
-                existingOverlay.remove();
-            }
-
-            // Injecter le nouveau overlay
-            header.insertAdjacentHTML('beforeend', getLoginOverlayHTML());
-        } else {
-            // Si pas de header, ajouter au body
-            document.body.insertAdjacentHTML('beforeend', getLoginOverlayHTML());
-        }
-
-        // Initialiser les événements
+        // Ne plus injecter le HTML de l'overlay
+        // On initialise seulement les événements de redirection
         initLoginEvents();
     }
 
     // Initialiser les événements du formulaire
     function initLoginEvents() {
-        const overlay = document.getElementById('login-overlay');
-        const form = document.getElementById('login-form');
-        const closeBtn = overlay?.querySelector('.close-overlay');
-
         // Rediriger directement vers la page login (qui affichera le dashboard)
         document.querySelectorAll('.js-open-client').forEach(btn => {
             btn.addEventListener('click', function (e) {
@@ -272,86 +254,6 @@
                 window.location.href = loginUrl;
             });
         });
-
-        // Fermer l'overlay
-        if (closeBtn) {
-            closeBtn.addEventListener('click', function () {
-                closeLoginOverlay();
-            });
-        }
-
-        // Fermer en cliquant en dehors
-        if (overlay) {
-            overlay.addEventListener('click', function (e) {
-                if (e.target === overlay) {
-                    closeLoginOverlay();
-                }
-            });
-        }
-
-        // Fermer avec Escape
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') {
-                closeLoginOverlay();
-            }
-        });
-
-        // Soumission du formulaire
-        if (form) {
-            form.addEventListener('submit', handleLogin);
-        }
-
-        // Boutons Paste - coller depuis le presse-papiers
-        document.querySelectorAll('.paste-btn').forEach(btn => {
-            btn.addEventListener('click', async function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('data-target');
-                const targetInput = document.getElementById(targetId);
-                if (targetInput) {
-                    try {
-                        const text = await navigator.clipboard.readText();
-                        if (text && text.trim().length > 0) {
-                            targetInput.value = text.trim();
-                            // Afficher la croix pour le mot de passe
-                            const clearBtn = this.parentElement.querySelector('.clear-btn');
-                            if (clearBtn) {
-                                clearBtn.classList.add('visible');
-                            }
-                        }
-                    } catch (err) {
-                        console.error('Clipboard access error:', err);
-                    }
-                }
-            });
-        });
-
-        // Boutons Clear - effacer le champ
-        document.querySelectorAll('.clear-btn').forEach(btn => {
-            btn.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('data-target');
-                const targetInput = document.getElementById(targetId);
-                if (targetInput) {
-                    targetInput.value = '';
-                    this.classList.remove('visible');
-                }
-            });
-        });
-
-        // Afficher la croix quand on saisit dans le champ email
-        const emailInput = document.getElementById('client-email');
-        if (emailInput) {
-            emailInput.addEventListener('input', function () {
-                const clearBtn = this.parentElement.querySelector('.clear-btn');
-                if (clearBtn) {
-                    if (this.value.length > 0) {
-                        clearBtn.classList.add('visible');
-                    } else {
-                        clearBtn.classList.remove('visible');
-                    }
-                }
-            });
-        }
     }
 
     // Ouvrir l'overlay de login
